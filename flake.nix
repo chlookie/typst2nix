@@ -2,15 +2,15 @@
   description = "typst2nix - Package Management and Tooling for Typst implemented in Nix ";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
-    utils.url = "github:numtide/flake-utils";
+    flake-utils.url = "github:numtide/flake-utils";
   };
   outputs =
     {
       nixpkgs,
-      utils,
+      flake-utils,
       ...
     }:
-    with utils.lib;
+    with flake-utils.lib;
     with nixpkgs.lib;
     with builtins;
     {
