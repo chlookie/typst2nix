@@ -62,9 +62,9 @@
           }:
           registry:
           flatten (
-            map (p: trace "[typst2nix] extracted dependency ${p.dep.name} from source" resolveDeps p.dep) (
-              extractDependencies' { inherit this path; } registry
-            )
+            map (
+              p: traceVerbose "[typst2nix] extracted dependency ${p.dep.name} from source" resolveDeps p.dep
+            ) (extractDependencies' { inherit this path; } registry)
           );
 
         # Recursively collect all dependencies of a typst package
@@ -73,7 +73,7 @@
           flatten (
             [ typstPkg ]
             ++ (map (
-              p: trace "[typst2nix] found ${typstPkg.name} depends on ${p.name}" (resolveDeps p)
+              p: traceVerbose "[typst2nix] found ${typstPkg.name} depends on ${p.name}" (resolveDeps p)
             ) typstPkg.passthru.typstDeps)
           );
 
@@ -196,7 +196,8 @@
               typstyle.enable = true;
             };
           };
-        } // packages;
+        }
+        // packages;
       }
     );
 }
