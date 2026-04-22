@@ -3,18 +3,11 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     utils.url = "github:numtide/flake-utils";
-
-    pre-commit-hooks = {
-      url = "github:cachix/pre-commit-hooks.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
   outputs =
     {
-      self,
       nixpkgs,
       utils,
-      pre-commit-hooks,
       ...
     }:
     with utils.lib;
@@ -112,92 +105,5 @@
             )
           );
       };
-    }
-    // eachSystem defaultSystems (
-      system:
-      let
-        pkgs = import nixpkgs {
-          inherit system;
-        };
-      in
-      rec {
-        packages = {
-          # Manual is no longer available in the latest cetz
-          # cetz-manual = (
-          #   self.helpers.buildTypstDoc rec {
-          #     inherit pkgs;
-          #     src = pkgs.fetchFromGitHub {
-          #       owner = "cetz-package";
-          #       repo = "cetz";
-          #       rev = "v${version}";
-          #       hash = "sha256-XaV4g/LOFGxh8zpQGwQPZrjIdlDxuhHJZpCN4Zp7gNU=";
-          #     };
-          #     main = "./manual.typ";
-          #     version = "0.4.0";
-          #     pname = "cetz-manual";
-          #   }
-          # );
-
-          anti-matter-manual = (
-            self.helpers.buildTypstDoc rec {
-              inherit pkgs;
-              src = pkgs.fetchFromGitHub {
-                owner = "tingerrr";
-                repo = "anti-matter";
-                rev = "v${version}";
-                hash = "sha256-J1ByutA/0ciP4/Q1N6ZJ71YNZpOH4XjxsD0+7DHl69M=";
-              };
-              main = "./docs/manual.typ";
-              version = "0.1.1";
-              pname = "anti-matter-manual";
-            }
-          );
-
-          physica-manual = (
-            self.helpers.buildTypstDoc rec {
-              inherit pkgs;
-              src = pkgs.fetchFromGitHub {
-                owner = "Leedehai";
-                repo = "typst-physics";
-                rev = "v${version}";
-                hash = "sha256-cMRjlmam97nl2A0SzaMUn6jDttcBE2sj90BF+jd5kpU=";
-              };
-              main = "./physica-manual.typ";
-              version = "0.9.5";
-              pname = "physica-manual";
-            }
-          );
-
-          quill-guide = (
-            self.helpers.buildTypstDoc rec {
-              inherit pkgs;
-              src = pkgs.fetchFromGitHub {
-                owner = "Mc-Zen";
-                repo = "quill";
-                rev = "v${version}";
-                hash = "sha256-/QTNzaqTUv2m5EqZI70I6nlqSo7aCR5oOWFdy3oFIZc=";
-              };
-              main = "./docs/guide/quill-guide.typ";
-              version = "0.7.1";
-              pname = "quill-guide";
-            }
-          );
-        };
-
-        checks = {
-          pre-commit-check = pre-commit-hooks.lib.${system}.run {
-            src = ./.;
-            hooks = {
-              nixfmt-rfc-style.enable = true;
-
-              shellcheck.enable = true;
-              shfmt.enable = true;
-
-              typstyle.enable = true;
-            };
-          };
-        }
-        // packages;
-      }
-    );
+    };
 }
