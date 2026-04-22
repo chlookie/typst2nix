@@ -14,7 +14,7 @@
     with nixpkgs.lib;
     with builtins;
     {
-      helpers = rec {
+      lib = rec {
         # Control root with `src`, control the entry point with `main`
         buildTypstDoc =
           {
