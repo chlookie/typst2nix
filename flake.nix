@@ -1,5 +1,5 @@
 {
-  description = "typst2nix - Package Management and Tooling for Typst implemented in Nix ";
+  description = "typst2nix - Package Management and Tooling for Typst implemented in Nix";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
@@ -15,36 +15,7 @@
     with builtins;
     {
       lib = rec {
-        # Control root with `src`, control the entry point with `main`
-        buildTypstDoc =
-          {
-            pkgs,
-            pname,
-            version,
-            src,
-            main,
-            ext ? "pdf",
-            inputs ? { },
-          }:
-          let
-            convertedInputs = foldr (a: b: a + " " + b) "" (
-              mapAttrsToList (n: v: "--input " + n + "=" + v) inputs
-            );
-          in
-          (pkgs.stdenv.mkDerivation rec {
-            inherit pname version src;
-
-            buildInputs = [
-              (pkgs.typst.withPackages (extractDependencies {
-                path = src;
-              }))
-            ];
-
-            buildPhase = ''
-              mkdir $out
-              typst compile ${main} $out/${pname}.${ext} --root . ${convertedInputs}
-            '';
-          });
+        # TODO: Redo buildTypstDoc using github:RossSmyth/press and `lib.extendMkDerivation`
 
         # Extract dependencies of a typst document from source (including the dependencies of the dependencies)
         # extracted dependencies must be present in the registry at the moment.
