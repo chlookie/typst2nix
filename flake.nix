@@ -15,22 +15,6 @@
     with builtins;
     {
       lib = rec {
-        copyDocumentApp =
-          args:
-          flake-utils.lib.mkApp {
-            drv = copyDocumentScript args;
-          };
-
-        copyDocumentScript =
-          {
-            document,
-            file ? "./pdf/out.pdf",
-          }:
-          pkgs.writeShellScriptBin "copy-document-${document.name or document.pname or "unknown"}" ''
-            mkdir -p $(basename ${file})
-            cp ${document} ${file}
-          '';
-
         # Extract dependencies of a typst document from source (including the dependencies of the dependencies)
         # extracted dependencies must be present in the registry at the moment.
         extractDependencies =
@@ -90,5 +74,24 @@
             )
           );
       };
+
+      overlays.default = final: prev: rec {
+        copyTypstDocumentApp =
+          args:
+          flake-utils.lib.mkApp {
+            drv = copyTypstDocumentScript args;
+          };
+
+        copyTypstDocumentScript =
+          {
+            document,
+            file ? "./pdf/out.pdf",
+          }:
+          prev.writeShellScriptBin "copy-document-${document.name or document.pname or "unknown"}" ''
+            mkdir -p $(basename ${file})
+            cp --force ${document} ${file}
+          '';
+      };
     };
+
 }
