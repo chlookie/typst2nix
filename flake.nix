@@ -85,11 +85,11 @@
         copyTypstDocumentScript =
           {
             document,
-            file ? "./pdf/out.pdf",
+            path ? "./pdf/${document.name or document.pname or "out"}.pdf",
           }:
           prev.writeShellScriptBin "copy-document-${document.name or document.pname or "unknown"}" ''
-            mkdir -p $(dirname ${file})
-            cp --force ${document} ${file}
+            mkdir -p $(dirname ${path})
+            cp --force ${document} ${path}
           '';
       };
     };
