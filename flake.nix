@@ -88,7 +88,7 @@
             file ? "./pdf/out.pdf",
           }:
           prev.writeShellScriptBin "copy-document-${document.name or document.pname or "unknown"}" ''
-            mkdir -p $(basename ${file})
+            mkdir -p $(dirname ${file})
             cp --force ${document} ${file}
           '';
       };
