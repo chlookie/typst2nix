@@ -14,6 +14,8 @@
     with nixpkgs.lib;
     with builtins;
     {
+      overlays.default = import ./.;
+
       lib = rec {
         # Extract dependencies of a typst document from source (including the dependencies of the dependencies)
         # extracted dependencies must be present in the registry at the moment.
@@ -73,24 +75,6 @@
               ) filtered
             )
           );
-      };
-
-      overlays.default = final: prev: rec {
-        copyTypstDocumentApp =
-          args:
-          flake-utils.lib.mkApp {
-            drv = copyTypstDocumentScript args;
-          };
-
-        copyTypstDocumentScript =
-          {
-            document,
-            path ? "./pdf/${document.name or document.pname or "out"}.pdf",
-          }:
-          prev.writeShellScriptBin "copy-document-${document.name or document.pname or "unknown"}" ''
-            mkdir -p $(dirname ${path})
-            cp --force ${document} ${path}
-          '';
       };
     };
 
